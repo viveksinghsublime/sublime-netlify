@@ -10,9 +10,9 @@ import ClientTestimonialsSection from "@/components/ClientTestimonialsSection";
 import WhyUs from "@/components/WhyUs";
 import CaseStudies from "@/components/CaseStudies";
 import Footer from "@/components/common/Footer";
-import { fetchPublishedReviews, REVIEWS_REVALIDATE_SECONDS } from "@/lib/reviews";
+import { fetchPublishedReviews } from "@/lib/reviews";
 
-export const revalidate = REVIEWS_REVALIDATE_SECONDS;
+export const revalidate = 600;
 
 export default async function Home() {
   const reviews = await fetchPublishedReviews();

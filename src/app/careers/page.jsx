@@ -5,7 +5,7 @@ import Footer from '@/components/common/Footer';
 import Card from '@/components/ui/Card';
 import { JobPostingSchema } from '@/components/JobPostingSchema';
 import CareersOpeningsSection from '@/components/careers/CareersOpeningsSection';
-import { fetchJobFilterMasters, fetchPublishedJobs, JOBS_REVALIDATE_SECONDS } from '@/lib/jobs';
+import { fetchJobFilterMasters, fetchPublishedJobs } from '@/lib/jobs';
 
 const breadcrumbItems = [
   { name: 'Home', href: '/' },
@@ -61,7 +61,7 @@ const officeLocations = [
   },
 ];
 
-export const revalidate = JOBS_REVALIDATE_SECONDS;
+export const revalidate = 600;
 
 export default async function CareersPage() {
   const [jobs, masters] = await Promise.all([fetchPublishedJobs(), fetchJobFilterMasters()]);

@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary Colors */
+    --primary-background: #008dd2;
+    --primary-foreground: #ffffff;
+    --primary-light: #33a3db;
+    --primary-dark: #006ba3;
+
+    /* Secondary Colors */
+    --secondary-background: #ffffff;
+    --secondary-foreground: #11181c;
+    --secondary-light: #f7f7f7;
+    --secondary-dark: #0d2642;
+
+    /* Accent Colors */
+    --accent-color: #f3f3f3;
+    --accent-foreground: #000000;
+    --accent-light: #f8f8f8;
+    --accent-dark: #e0e0e0;
+
+    /* Border Colors */
+    --border-primary: #d9d9d9;
+    --border-secondary: #b1b1b1;
+    --border-light: #e5e5e5;
+    --border-dark: #aeaeae;
+  }
+}
+
+@layer utilities {
+  /* Background Color Utilities */
+  .bg-primary-blue {
+    background-color: var(--primary-background);
+  }
+
+  .bg-primary-light {
+    background-color: var(--primary-light);
+  }
+
+  .bg-primary-dark {
+    background-color: var(--primary-dark);
+  }
+
+  .bg-secondary-white {
+    background-color: var(--secondary-background);
+  }
+
+  .bg-secondary-light {
+    background-color: var(--secondary-light);
+  }
+
+  .bg-secondary-dark {
+    background-color: var(--secondary-dark);
+  }
+
+  .bg-accent {
+    background-color: var(--accent-color);
+  }
+
+  .bg-accent-light {
+    background-color: var(--accent-light);
+  }
+
+  .bg-accent-dark {
+    background-color: var(--accent-dark);
+  }
+
+  /* Text Color Utilities */
+  .text-primary-white {
+    color: var(--primary-foreground);
+  }
+
+  .text-secondary-dark {
+    color: var(--secondary-foreground);
+  }
+
+  .text-accent-black {
+    color: var(--accent-foreground);
+  }
+
+  /* Border Color Utilities */
+  .border-primary {
+    border-color: var(--border-primary);
+  }
+
+  .border-secondary {
+    border-color: var(--border-secondary);
+  }
+
+  .border-light {
+    border-color: var(--border-light);
+  }
+
+  .border-dark {
+    border-color: var(--border-dark);
+  }
+
+  /* Custom spacing utilities */
+  .px-25 {
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+
+  .px-30 {
+    padding-left: 120px;
+    padding-right: 120px;
+  }
+
+  /* Custom line height utilities */
+  .leading-11 {
+    line-height: 44px;
+  }
+
+  /* Backdrop blur utilities */
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+  }
+}

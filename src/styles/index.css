@@ -1,0 +1,61 @@
+@import './tailwind.css';
+
+:root {
+  --font-manrope: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-ibm-plex-mono: 'Consolas', 'SFMono-Regular', 'Liberation Mono', monospace;
+}
+
+body {
+  font-family: var(--font-manrope), sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.admin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.admin-scrollbar:hover {
+  scrollbar-color: rgba(148, 163, 184, 0.9) transparent;
+}
+
+.admin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+
+.admin-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.9);
+}
+
+/* Skip link: visible on keyboard focus (complements Tailwind sr-only utilities) */
+.skip-to-main:focus {
+  position: fixed;
+  z-index: 9999;
+  left: 1rem;
+  top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #fff;
+  color: #000;
+  outline: 2px solid #008dd2;
+  clip: auto;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  white-space: normal;
+}

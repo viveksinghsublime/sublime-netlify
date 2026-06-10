@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@dhiwise/component-tagger": "^1.0.3",
+    "@marsidev/react-turnstile": "^1.5.2",
     "@tailwindcss/typography": "^0.5.19",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",

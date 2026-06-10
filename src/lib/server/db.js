@@ -36,6 +36,7 @@ export function getPool() {
   const config = getDatabaseConfig();
   globalForDb.__sublimeDbPool = mysql.createPool({
     ...config,
+    connectTimeout: 10000,
     waitForConnections: true,
     connectionLimit: 5,
     maxIdle: 5,

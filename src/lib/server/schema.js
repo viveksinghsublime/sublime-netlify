@@ -130,6 +130,17 @@ const CREATE_STATEMENTS = [
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_reviews_status (status)
   )`,
+  `CREATE TABLE IF NOT EXISTS request_rate_limits (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    key_name VARCHAR(100) NOT NULL,
+    identifier VARCHAR(255) NOT NULL,
+    request_count INT UNSIGNED NOT NULL DEFAULT 0,
+    window_start DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_rate_limit_key_identifier (key_name, identifier),
+    INDEX idx_rate_limit_window_start (window_start)
+  )`,
 ];
 
 async function seedAdminUser() {
@@ -179,4 +190,3 @@ export async function ensureDatabaseSetup() {
 
   await ensurePromise;
 }
-

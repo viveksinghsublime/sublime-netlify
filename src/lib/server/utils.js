@@ -43,6 +43,23 @@ export function normalizeWhitespace(value) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
+export function stripControlCharacters(value) {
+  if (typeof value !== 'string') {
+    return '';
+  }
+
+  return value.replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, '').trim();
+}
+
+export function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function normalizeSlug(value) {
   if (!value || typeof value !== 'string') {
     return '';
@@ -68,4 +85,3 @@ export function summarizeText(value, maxLength = 120) {
   const stringValue = String(value).trim();
   return stringValue.length > maxLength ? `${stringValue.slice(0, maxLength)}...` : stringValue;
 }
-

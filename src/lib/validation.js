@@ -16,6 +16,10 @@ function hasValue(value) {
   return trimValue(value) !== '';
 }
 
+function exceedsMaxLength(value, maxLength) {
+  return trimValue(value).length > maxLength;
+}
+
 export function isValidEmail(value) {
   const email = trimValue(value);
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -82,14 +86,27 @@ export function validateAdminLoginForm(values) {
 
 export function validateContactForm(values) {
   if (!hasValue(values.fullName)) return 'Full name is required.';
+  if (exceedsMaxLength(values.fullName, 120)) return 'Full name must be 120 characters or fewer.';
   if (!hasValue(values.emailAddress)) return 'Email address is required.';
   if (!isValidEmail(values.emailAddress)) return 'Enter a valid email address.';
+  if (exceedsMaxLength(values.emailAddress, 254)) return 'Email address is too long.';
   if (!hasValue(values.phoneNumber)) return 'Phone number is required.';
   if (!isValidPhone(values.phoneNumber)) return 'Enter a valid phone number.';
+  if (exceedsMaxLength(values.phoneNumber, 32)) return 'Phone number is too long.';
+  if (hasValue(values.companyName) && exceedsMaxLength(values.companyName, 160)) {
+    return 'Company name must be 160 characters or fewer.';
+  }
   if (!hasValue(values.serviceInterestedIn)) return 'Please select a service.';
+  if (exceedsMaxLength(values.serviceInterestedIn, 120)) return 'Selected service value is too long.';
   if (!hasValue(values.message)) return 'Project requirement / message is required.';
   if (trimValue(values.message).length < 10) {
     return 'Project requirement / message must be at least 10 characters.';
+  }
+  if (exceedsMaxLength(values.message, 5000)) {
+    return 'Project requirement / message must be 5000 characters or fewer.';
+  }
+  if (hasValue(values.turnstileToken) === false) {
+    return 'Please complete the verification check.';
   }
   return '';
 }
@@ -188,14 +205,28 @@ export function validateCrudForm(fields, values) {
 
 export function validateContactLeadPayload(lead) {
   if (!hasValue(lead.name)) return 'Name is required.';
+  if (exceedsMaxLength(lead.name, 120)) return 'Name must be 120 characters or fewer.';
   if (!hasValue(lead.email)) return 'Email is required.';
   if (!isValidEmail(lead.email)) return 'Enter a valid email address.';
+  if (exceedsMaxLength(lead.email, 254)) return 'Email address is too long.';
   if (!hasValue(lead.phone)) return 'Phone is required.';
   if (!isValidPhone(lead.phone)) return 'Enter a valid phone number.';
+  if (exceedsMaxLength(lead.phone, 32)) return 'Phone number is too long.';
+  if (hasValue(lead.company_name) && exceedsMaxLength(lead.company_name, 160)) {
+    return 'Company name must be 160 characters or fewer.';
+  }
+  if (hasValue(lead.service_interested_in) && exceedsMaxLength(lead.service_interested_in, 120)) {
+    return 'Service value is too long.';
+  }
   if (!hasValue(lead.source)) return 'Source is required.';
+  if (exceedsMaxLength(lead.source, 120)) return 'Source is too long.';
   if (!hasValue(lead.subject)) return 'Subject is required.';
+  if (exceedsMaxLength(lead.subject, 200)) return 'Subject is too long.';
   if (hasValue(lead.message) && trimValue(lead.message).length < 10) {
     return 'Message must be at least 10 characters.';
+  }
+  if (hasValue(lead.message) && exceedsMaxLength(lead.message, 5000)) {
+    return 'Message must be 5000 characters or fewer.';
   }
   return '';
 }

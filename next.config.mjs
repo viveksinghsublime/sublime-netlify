@@ -18,9 +18,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    optimizePackageImports: ['react-icons', 'lucide-react'],
-  },
   async redirects() {
     return [
       {
@@ -61,15 +58,17 @@ const nextConfig = {
         reuseExistingChunk: true,
       };
     }
-    config.module.rules.push({
-      test: /\.(jsx|tsx)$/,
-      exclude: [/node_modules/],
-      use: [
-        {
-          loader: '@dhiwise/component-tagger/nextLoader',
-        },
-      ],
-    });
+    if (ctx.dev) {
+      config.module.rules.push({
+        test: /\.(jsx|tsx)$/,
+        exclude: [/node_modules/],
+        use: [
+          {
+            loader: '@dhiwise/component-tagger/nextLoader',
+          },
+        ],
+      });
+    }
     return config;
   },
 };

@@ -36,8 +36,8 @@ function ContactDetail({ icon: Icon, title, value, href }) {
         <Icon className="h-7 w-7" />
       </div>
       <div>
-        <p className="text-[1.15rem] font-semibold text-white">{title}</p>
-        <p className="mt-1 text-base text-slate-400 transition-colors group-hover:text-slate-300">
+        <p className="text-lg font-semibold text-white">{title}</p>
+        <p className="mt-1 text-base text-[#A0AEC0] transition-colors group-hover:text-slate-300">
           {value}
         </p>
       </div>
@@ -56,26 +56,26 @@ export default function ContactUsPage() {
           <div className="absolute bottom-0 right-[-5%] h-80 w-80 rounded-full bg-[#00B4FF]/10 blur-3xl" />
         </div>
 
-        <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:px-12">
-          <div className="flex flex-col justify-between gap-10 pt-2 lg:pr-10">
+        <div className="relative mx-auto grid max-w-[1440px] gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-12">
+          <div className="flex flex-col gap-10 pt-2 lg:pr-10">
             <div>
               <div className="flex items-center gap-3">
-                <span className="text-sm font-semibold uppercase tracking-[0.22em] text-[#00B4FF]">
+                <span className="text-sm font-semibold uppercase tracking-[0.7px] text-[#00B4FF]">
                   Contact Us
                 </span>
                 <span className="h-0.5 w-8 bg-[#00B4FF]" />
               </div>
 
               <div className="pt-5">
-                <h1 className="text-4xl font-bold leading-none text-[#E9EEF0] sm:text-5xl lg:text-[56px] lg:leading-[1.15]">
-                  Let&apos;s Build
+                <h1 className="font-manrope text-[56px] font-bold leading-[68px] text-[#E9EEF0]">
+                  Let's Build
                 </h1>
-                <p className="mt-2 text-4xl font-bold leading-none text-[#008DD2] sm:text-5xl lg:text-[56px] lg:leading-[1.15]">
+                <h2 className="font-manrope mt-2 text-[56px] font-bold leading-[68px] text-[#008DD2]">
                   Something Great
-                </p>
+                </h2>
               </div>
 
-              <p className="mt-8 max-w-[28rem] text-lg leading-8 text-slate-400">
+              <p className="mt-6 max-w-[28rem] text-lg leading-[29px] text-[#A0AEC0]">
                 Have a project in mind or want to learn more about our services? Fill out the
                 form and our team will get back to you shortly.
               </p>

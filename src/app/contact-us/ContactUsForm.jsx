@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   ArrowRight,
   Building2,
@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   User,
 } from 'lucide-react';
+import { Turnstile } from '@marsidev/react-turnstile';
 import { THANK_YOU_PATH } from '@/lib/site';
 import { validateContactForm } from '@/lib/validation';
 
@@ -23,6 +24,8 @@ const initialFormState = {
   companyName: '',
   serviceInterestedIn: '',
   message: '',
+  secondary_email: '',
+  turnstileToken: '',
 };
 
 const serviceOptions = [
@@ -35,13 +38,19 @@ const serviceOptions = [
 ];
 
 const inputClasses =
-  'w-full rounded-xl border border-white/10 bg-[#0F1F33] px-4 py-3 text-base text-white outline-none transition placeholder:text-slate-500 focus:border-[#0088FF] focus:ring-2 focus:ring-[#0088FF]/20';
+  'w-full rounded-lg border border-[#C8C8C8] bg-white px-4 py-[14px] text-base text-[#161F33] outline-none transition placeholder:text-[#4A5568] focus:border-[#008DD2] focus:ring-1 focus:ring-[#008DD2]/30';
+
+const selectClasses =
+  'w-full rounded-lg border border-[#C8C8C8] bg-white px-4 py-3 text-base text-[#4A5568] outline-none transition appearance-none focus:border-[#008DD2] focus:ring-1 focus:ring-[#008DD2]/30';
+
+const textareaClasses =
+  'w-full rounded-lg border border-[#C8C8C8] bg-white px-4 py-3 text-base text-[#161F33] outline-none transition placeholder:text-[#4A5568] focus:border-[#008DD2] focus:ring-1 focus:ring-[#008DD2]/30 resize-y min-h-[122px]';
 
 function FieldLabel({ children, required = false }) {
   return (
-    <span className="text-sm font-medium text-white">
+    <span className="text-sm font-medium text-[#161F33]">
       {children}
-      {required ? <span className="ml-1 text-red-400">*</span> : null}
+      {required ? <span className="ml-0.5 text-red-400">*</span> : null}
     </span>
   );
 }
@@ -57,7 +66,7 @@ function TextInput({
 }) {
   return (
     <div className="relative">
-      <Icon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+      <Icon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#A0AEC0]" />
       <input
         required={required}
         type={type}
@@ -73,6 +82,8 @@ function TextInput({
 
 export default function ContactUsForm() {
   const router = useRouter();
+  const turnstileRef = useRef(null);
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '';
   const [formData, setFormData] = useState(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -85,6 +96,10 @@ export default function ContactUsForm() {
   async function handleSubmit(event) {
     event.preventDefault();
     setErrorMessage('');
+
+    if (String(formData.secondary_email || '').trim()) {
+      return;
+    }
 
     const validationMessage = validateContactForm(formData);
     if (validationMessage) {
@@ -107,6 +122,8 @@ export default function ContactUsForm() {
           company_name: formData.companyName,
           service_interested_in: formData.serviceInterestedIn,
           message: formData.message,
+          turnstileToken: formData.turnstileToken,
+          secondary_email: formData.secondary_email,
           source: 'contact-us',
           subject: 'New contact enquiry from sublimetechnocorp.com',
         }),
@@ -115,6 +132,8 @@ export default function ContactUsForm() {
       const payload = await response.json();
       if (!response.ok) {
         setErrorMessage(payload.message || 'Unable to submit the form right now.');
+        setFormData((current) => ({ ...current, turnstileToken: '' }));
+        turnstileRef.current?.reset?.();
         setIsSubmitting(false);
         return;
       }
@@ -122,23 +141,40 @@ export default function ContactUsForm() {
       router.push(THANK_YOU_PATH);
     } catch {
       setErrorMessage('Something went wrong while submitting the form.');
+      setFormData((current) => ({ ...current, turnstileToken: '' }));
+      turnstileRef.current?.reset?.();
       setIsSubmitting(false);
     }
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-[linear-gradient(180deg,rgba(13,27,46,0.88)_0%,rgba(12,31,50,0.96)_100%)] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.35)] backdrop-blur-sm sm:p-8 lg:p-10">
+    <div className="rounded-2xl border border-white/10 bg-white p-10 shadow-lg">
       <div>
-        <h2 className="text-3xl font-bold text-white sm:text-[2rem]">Send Us a Message</h2>
-        <p className="mt-3 text-base text-slate-400">
-          We&apos;d love to hear from you. Please fill out the form.
+        <h2 className="font-inter text-[32px] font-bold leading-[48px] text-[#161F33]">
+          Send Us a Message
+        </h2>
+        <p className="mt-1 text-base leading-6 text-[#3D3D3C]">
+          We'd love to hear from you. Please fill out the form.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-8 grid gap-6">
+      <form onSubmit={handleSubmit} className="relative mt-6 grid gap-6">
+        <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden opacity-0" aria-hidden="true">
+          <label htmlFor="secondary_email">Secondary email</label>
+          <input
+            id="secondary_email"
+            type="text"
+            name="secondary_email"
+            value={formData.secondary_email}
+            onChange={handleChange}
+            autoComplete="off"
+            tabIndex={-1}
+          />
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2">
           <label className="grid gap-2">
-            <FieldLabel required>Name</FieldLabel>
+            <FieldLabel required>Full Name</FieldLabel>
             <TextInput
               icon={User}
               required
@@ -188,54 +224,53 @@ export default function ContactUsForm() {
         </div>
 
         <label className="grid gap-2">
-          <FieldLabel required>Service</FieldLabel>
+          <FieldLabel required>Service Interested In</FieldLabel>
           <div className="relative">
             <select
               required
               name="serviceInterestedIn"
               value={formData.serviceInterestedIn}
               onChange={handleChange}
-              className={`${inputClasses} appearance-none pr-12`}
+              className={selectClasses}
             >
-              <option value="">Select a service</option>
+              <option value="" disabled>Select a service</option>
               {serviceOptions.map((service) => (
                 <option key={service} value={service}>
                   {service}
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#A0AEC0]" />
           </div>
         </label>
 
         <label className="grid gap-2">
-          <FieldLabel>Project Description</FieldLabel>
+          <FieldLabel>Project Requirement / Message</FieldLabel>
           <textarea
-            rows={5}
             name="message"
             value={formData.message}
             onChange={handleChange}
             placeholder="Tell us about your project"
-            className={`${inputClasses} min-h-[150px] resize-y`}
+            className={textareaClasses}
           />
         </label>
 
-        <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-[rgba(26,41,66,0.6)] p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 rounded-xl border border-white/10 bg-[#F7F9FE] p-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#0088FF]/20 text-[#00B4FF]">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-[#008DD2] text-white">
               <CalendarDays className="h-7 w-7" />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-white">Schedule an Appointment</h3>
-              <p className="mt-1 text-sm text-slate-400">
-                Pick a time to talk with our experts.
+              <h3 className="text-base font-semibold text-[#161F33]">Schedule an Appointment</h3>
+              <p className="mt-1 text-sm leading-6 text-[#3D3D3C]">
+                Pick a time to talk with our team.
               </p>
             </div>
           </div>
 
           <Link
             href="mailto:info@sublimetechnocorp.com?subject=Schedule%20a%20Consultation"
-            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#0088FF] px-4 py-2 text-sm font-medium text-[#00B4FF] transition-colors hover:bg-[#0088FF]/10"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-[#008DD2] px-4 py-2 text-sm font-medium text-[#008DD2] transition-colors hover:bg-[#008DD2]/10"
           >
             Schedule to Talk
             <ArrowRight className="h-4 w-4" />
@@ -243,20 +278,47 @@ export default function ContactUsForm() {
         </div>
 
         <div>
+          {turnstileSiteKey ? (
+            <div className="mb-4 overflow-hidden rounded-lg border border-[#C8C8C8] bg-white px-3 py-3">
+              <Turnstile
+                ref={turnstileRef}
+                id="contact-turnstile"
+                siteKey={turnstileSiteKey}
+                onSuccess={(token) => {
+                  setFormData((current) => ({ ...current, turnstileToken: token }));
+                }}
+                onExpire={() => {
+                  setFormData((current) => ({ ...current, turnstileToken: '' }));
+                }}
+                onError={() => {
+                  setFormData((current) => ({ ...current, turnstileToken: '' }));
+                }}
+                options={{
+                  theme: 'light',
+                  size: 'flexible',
+                }}
+              />
+            </div>
+          ) : (
+            <p className="mb-4 text-sm text-red-400">
+              Bot protection is not configured yet. Add the Turnstile site key to enable form submissions.
+            </p>
+          )}
+
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#0A8DFF] px-6 py-4 text-base font-semibold text-white transition hover:bg-[#0b7fe4] disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#008DD2] px-6 py-4 text-base font-semibold text-white transition hover:bg-[#007bb8] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSubmitting ? 'Submitting...' : 'Send Message'}
+            {isSubmitting ? 'Submitting...' : 'Submit'}
             <ArrowRight className="h-5 w-5" />
           </button>
 
           {errorMessage ? <p className="mt-3 text-sm text-red-400">{errorMessage}</p> : null}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-400">
-          <ShieldCheck className="h-5 w-5 shrink-0" />
+        <div className="flex items-center gap-2 text-sm text-[#3D3D3C]">
+          <ShieldCheck className="h-5 w-5 shrink-0 text-[#3D3D3C]" />
           <p>We respect your privacy. Your information will never be shared.</p>
         </div>
       </form>

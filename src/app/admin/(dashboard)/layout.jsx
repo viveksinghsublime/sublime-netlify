@@ -8,6 +8,9 @@ export const metadata = {
   title: 'Admin | Sublime Technocorp',
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminDashboardLayout({ children }) {
   const cookieStore = await cookies();
   const session = getAdminSessionFromCookieStore(cookieStore);

@@ -27,7 +27,7 @@ export function getCaseStudyPath(project) {
 
 export function getCaseStudyMediaUrl(path) {
   if (!path) {
-    return toAbsoluteUrl(DEFAULT_OG_IMAGE);
+    return DEFAULT_OG_IMAGE;
   }
 
   if (path.startsWith('http://') || path.startsWith('https://')) {

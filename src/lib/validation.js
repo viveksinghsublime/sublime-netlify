@@ -84,6 +84,38 @@ export function validateAdminLoginForm(values) {
   return '';
 }
 
+export function validateAdminPasswordChangeForm(values) {
+  if (!hasValue(values.currentPassword)) {
+    return 'Current password is required.';
+  }
+  if (!hasValue(values.newPassword)) {
+    return 'New password is required.';
+  }
+  if (trimValue(values.newPassword).length < 8) {
+    return 'New password must be at least 8 characters.';
+  }
+  if (!/[a-z]/.test(values.newPassword) || !/[A-Z]/.test(values.newPassword)) {
+    return 'New password must include both uppercase and lowercase letters.';
+  }
+  if (!/\d/.test(values.newPassword)) {
+    return 'New password must include at least one number.';
+  }
+  if (!/[^a-zA-Z0-9]/.test(values.newPassword)) {
+    return 'New password must include at least one special character.';
+  }
+  if (!hasValue(values.confirmPassword)) {
+    return 'Please confirm the new password.';
+  }
+  if (values.newPassword !== values.confirmPassword) {
+    return 'New password and confirmation do not match.';
+  }
+  if (values.currentPassword === values.newPassword) {
+    return 'New password must be different from the current password.';
+  }
+
+  return '';
+}
+
 export function validateContactForm(values) {
   if (!hasValue(values.fullName)) return 'Full name is required.';
   if (exceedsMaxLength(values.fullName, 120)) return 'Full name must be 120 characters or fewer.';

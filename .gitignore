@@ -43,3 +43,9 @@ turbo/
 
 # Runtime uploads
 public/uploads/
+
+
+# env
+*.env
+.env/
+.env

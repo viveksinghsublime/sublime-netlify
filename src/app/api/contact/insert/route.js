@@ -16,7 +16,9 @@ export async function POST(request) {
     const ipAddress = getRequestIp(request);
     const rateLimit = await enforceRateLimit('contact_form', ipAddress);
     if (!rateLimit.allowed) {
-      return jsonError('Too many contact form submissions. Please try again later.', 429);
+      return jsonError('Too many contact form submissions. Please try again later.', 429, {
+        retryAfterSeconds: rateLimit.retryAfterSeconds || null,
+      });
     }
 
     const verification = await verifyTurnstileToken(payload.turnstileToken, ipAddress);

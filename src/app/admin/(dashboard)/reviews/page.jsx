@@ -12,6 +12,7 @@ export default async function AdminReviewsPage() {
   const fields = [
     { name: 'name', label: 'Reviewer Name', required: true },
     { name: 'position', label: 'Position / Company' },
+    { name: 'company_name', label: 'Company Name' },
     { name: 'message', label: 'Message', required: true, type: 'textarea', rows: 5 },
     { name: 'image', label: 'Image', type: 'file', accept: '.jpg,.jpeg,.png,.webp,.gif', hideInTable: true },
     { name: 'sort_order', label: 'Sort Order', type: 'number' },

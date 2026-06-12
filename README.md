@@ -200,7 +200,20 @@ The features section renders the original tabbed UI:
 
 ```env
 NEXT_PUBLIC_BASE_URL=https://api.samiinfotech.com/
+SMTP_HOST=smtp.mailgun.org
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=postmaster@mg.yourdomain.com
+SMTP_PASS=your-mailgun-smtp-password
+SMTP_FROM=noreply@yourdomain.com
+CONTACT_RECIPIENTS=team@yourdomain.com
 ```
+
+## Mail Delivery Notes
+
+- Mailgun SMTP credentials are managed per domain, so `SMTP_USER` and `SMTP_PASS` should come from the same Mailgun sending domain you intend to use.
+- Mailgun sandbox domains are for testing only and are limited to authorized recipients, so production traffic should use a verified custom domain instead of a `sandbox...mailgun.org` sender.
+- Keep `SMTP_FROM` aligned with that verified Mailgun domain to improve inbox placement and avoid sender-domain mismatches.
 
 ## API Endpoints Used
 

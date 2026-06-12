@@ -8,6 +8,7 @@ function normalizeReviewPayload(payload) {
   return {
     name: normalizeWhitespace(payload.name),
     position: payload.position || '',
+    company_name: payload.company_name || '',
     message: payload.message || '',
     sort_order: toInteger(payload.sort_order, 0),
     is_published: toBooleanFlag(payload.is_published),
@@ -51,11 +52,19 @@ export async function createReview(formData) {
     throw new Error(imageValidationMessage);
   }
 
+  const existingSortOrder = await getOne(
+    'SELECT id FROM reviews WHERE sort_order = ? AND status = 1 LIMIT 1',
+    [payload.sort_order]
+  );
+  if (existingSortOrder) {
+    throw new Error(`Sort order ${payload.sort_order} is already in use. Choose a different value.`);
+  }
+
   const image = await saveUploadedFile(imageFile, 'reviews', 'review');
   const result = await query(
-    `INSERT INTO reviews (name, position, message, image, sort_order, is_published, status)
-     VALUES (?, ?, ?, ?, ?, ?, 1)`,
-    [payload.name, payload.position, payload.message, image, payload.sort_order, payload.is_published]
+    `INSERT INTO reviews (name, position, company_name, message, image, sort_order, is_published, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+    [payload.name, payload.position, payload.company_name, payload.message, image, payload.sort_order, payload.is_published]
   );
 
   return getReviewById(result.insertId, { includeDeleted: false });
@@ -81,10 +90,18 @@ export async function updateReview(id, formData) {
     throw new Error(imageValidationMessage);
   }
 
+  const duplicateSortOrder = await getOne(
+    'SELECT id FROM reviews WHERE sort_order = ? AND id != ? AND status = 1 LIMIT 1',
+    [payload.sort_order, id]
+  );
+  if (duplicateSortOrder) {
+    throw new Error(`Sort order ${payload.sort_order} is already in use. Choose a different value.`);
+  }
+
   const image = (await saveUploadedFile(imageFile, 'reviews', 'review')) || existing.image || '';
   await query(
-    'UPDATE reviews SET name = ?, position = ?, message = ?, image = ?, sort_order = ?, is_published = ? WHERE id = ?',
-    [payload.name, payload.position, payload.message, image, payload.sort_order, payload.is_published, id]
+    'UPDATE reviews SET name = ?, position = ?, company_name = ?, message = ?, image = ?, sort_order = ?, is_published = ? WHERE id = ?',
+    [payload.name, payload.position, payload.company_name, payload.message, image, payload.sort_order, payload.is_published, id]
   );
 
   return getReviewById(id, { includeDeleted: false });

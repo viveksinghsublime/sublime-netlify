@@ -10,21 +10,12 @@ import Card from '@/components/ui/Card';
 import AdminPagination from '@/components/admin/AdminPagination';
 import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal';
 import { getCaseStudyMediaUrl } from '@/lib/caseStudyShared';
+import { formatAdminDate } from '@/lib/adminDate';
 
 const CaseStudyForm = dynamic(() => import('@/components/admin/CaseStudyForm'), {
   ssr: false,
   loading: () => <div className="h-80 animate-pulse rounded-2xl bg-slate-100" />,
 });
-
-function formatDate(value) {
-  if (!value) return '-';
-
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return '-';
-  }
-}
 
 function formatText(value) {
   return value || '-';
@@ -100,7 +91,7 @@ function CaseStudyViewModal({ caseStudy, onClose }) {
                 <ReadOnlyField label="Short URL" value={caseStudy.short_url} />
                 <ReadOnlyField label="Accent Color" value={caseStudy.colorCode ? `#${String(caseStudy.colorCode).replace('#', '')}` : ''} />
                 <ReadOnlyField label="Top Project" value={caseStudy.isTopProject ? 'Yes' : 'No'} />
-                <ReadOnlyField label="Updated" value={formatDate(caseStudy.updated_at)} />
+                <ReadOnlyField label="Updated" value={formatAdminDate(caseStudy.updated_at)} />
               </section>
 
               <section className="grid gap-4">
@@ -434,7 +425,7 @@ export default function CaseStudyList({ caseStudies, categories, subcategories }
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="max-w-full overflow-x-auto">
           <table className="min-w-full border-collapse">
             <thead>
               <tr className="border-b border-slate-200">
@@ -459,7 +450,7 @@ export default function CaseStudyList({ caseStudies, categories, subcategories }
                   <td className="px-4 py-4 text-sm text-slate-600">
                     {[caseStudy.category_name, caseStudy.subcategory_name].filter(Boolean).join(' / ') || '-'}
                   </td>
-                  <td className="px-4 py-4 text-sm text-slate-600">{formatDate(caseStudy.updated_at)}</td>
+                  <td className="px-4 py-4 text-sm text-slate-600">{formatAdminDate(caseStudy.updated_at)}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
                       <button

@@ -8,21 +8,12 @@ import { Eye, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import AdminPagination from '@/components/admin/AdminPagination';
 import DeleteConfirmationModal from '@/components/admin/DeleteConfirmationModal';
+import { formatAdminDate } from '@/lib/adminDate';
 
 const JobPostingForm = dynamic(() => import('@/components/admin/JobPostingForm'), {
   ssr: false,
   loading: () => <div className="h-64 animate-pulse rounded-2xl bg-slate-100" />,
 });
-
-function formatDate(value) {
-  if (!value) return '-';
-
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return '-';
-  }
-}
 
 export default function JobPostingList({ jobs, roles, locations, employmentTypes }) {
   const router = useRouter();
@@ -123,7 +114,7 @@ export default function JobPostingList({ jobs, roles, locations, employmentTypes
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="max-w-full overflow-x-auto">
           <table className="min-w-full border-collapse">
             <thead>
               <tr className="border-b border-slate-200">
@@ -162,7 +153,7 @@ export default function JobPostingList({ jobs, roles, locations, employmentTypes
                   <td className="px-4 py-4 text-sm text-slate-600">
                     {Number(job.is_published) === 1 ? 'Yes' : 'No'}
                   </td>
-                  <td className="px-4 py-4 text-sm text-slate-600">{formatDate(job.updated_at)}</td>
+                  <td className="px-4 py-4 text-sm text-slate-600">{formatAdminDate(job.updated_at)}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
                       <Link

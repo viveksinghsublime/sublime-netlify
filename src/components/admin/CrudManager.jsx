@@ -63,9 +63,9 @@ function CrudModal({
   onClose,
 }) {
   return (
-    <div className="fixed inset-0 z-[70] bg-slate-950/70 px-4 py-4 sm:py-6">
+      <div className="fixed inset-0 z-[70] bg-slate-950/70 px-4 py-4 sm:py-6">
       <div className="flex h-full items-center justify-center">
-        <Card className="flex max-h-[calc(100vh-2rem)] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-xl sm:max-h-[calc(100vh-3rem)] sm:p-6">
+        <Card className="flex h-full w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-5 shadow-xl sm:h-[calc(100vh-3rem)] sm:p-6">
           <div className="mb-5 flex flex-shrink-0 items-start justify-between gap-4 border-b border-slate-200 pb-4">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
@@ -82,7 +82,7 @@ function CrudModal({
             </button>
           </div>
 
-          <div className="min-h-0">{children}</div>
+          <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
         </Card>
       </div>
     </div>
@@ -324,8 +324,8 @@ export default function CrudManager({
 
   function renderForm() {
     return (
-      <form onSubmit={handleSubmit} className="flex min-h-0 flex-col">
-        <div className="min-h-0 overflow-y-auto pr-1">
+      <form onSubmit={handleSubmit} className="flex h-full flex-col">
+        <div className="min-h-0 flex-1 overflow-y-auto pr-1">
           <div className="grid gap-6 pb-2">
             <div className="grid gap-5 md:grid-cols-2">
               {formFields.map((field) => {
@@ -514,7 +514,7 @@ export default function CrudManager({
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="max-w-full overflow-x-auto">
           <table className="min-w-full border-collapse">
             <thead>
               <tr className="border-b border-slate-200">

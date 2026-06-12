@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Eye, Pencil } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
+import { formatAdminDateTime } from '@/lib/adminDate';
 import { getJobById } from '@/lib/server/jobs';
 
 function DetailRow({ label, value }) {
@@ -58,7 +59,7 @@ export default async function JobPostingDetailPage({ params }) {
           <DetailRow label="Employment Type" value={job.employment_type_name} />
           <DetailRow label="Published" value={Number(job.is_published) === 1 ? 'Yes' : 'No'} />
           <DetailRow label="Slug" value={job.slug} />
-          <DetailRow label="Updated" value={job.updated_at ? new Date(job.updated_at).toLocaleString() : '-'} />
+          <DetailRow label="Updated" value={formatAdminDateTime(job.updated_at)} />
         </div>
 
         <div className="mt-6 grid gap-6">

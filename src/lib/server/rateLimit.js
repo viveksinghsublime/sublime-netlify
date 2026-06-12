@@ -3,7 +3,14 @@ import { ensureDatabaseSetup } from '@/lib/server/schema';
 import { normalizeWhitespace } from '@/lib/server/utils';
 
 function getWindowConfig() {
+  const rawEnabledValue = String(process.env.CONTACT_RATE_LIMIT_ENABLED || '').trim().toLowerCase();
+  const isEnabled =
+    rawEnabledValue === ''
+      ? process.env.NODE_ENV === 'production'
+      : !['0', 'false', 'no', 'off'].includes(rawEnabledValue);
+
   return {
+    isEnabled,
     maxRequests: Number(process.env.CONTACT_RATE_LIMIT_MAX || 5),
     windowSeconds: Number(process.env.CONTACT_RATE_LIMIT_WINDOW_SECONDS || 3600),
   };
@@ -14,7 +21,16 @@ export async function enforceRateLimit(keyName, identifier) {
 
   const normalizedKey = normalizeWhitespace(keyName);
   const normalizedIdentifier = normalizeWhitespace(identifier || 'unknown');
-  const { maxRequests, windowSeconds } = getWindowConfig();
+  const { isEnabled, maxRequests, windowSeconds } = getWindowConfig();
+
+  if (!isEnabled) {
+    return {
+      allowed: true,
+      remaining: null,
+      disabled: true,
+    };
+  }
+
   const now = new Date();
 
   const existing = await getOne(

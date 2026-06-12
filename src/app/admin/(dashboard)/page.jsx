@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import Card from '@/components/ui/Card';
+import { ADMIN_DASHBOARD_METRICS, isAdminModuleVisible } from '@/lib/adminModules';
 import { listAdminCaseStudies, listCaseStudyCategories, listCaseStudySubcategories } from '@/lib/server/caseStudies';
+import { listAdminContacts } from '@/lib/server/contact';
 import { listAdminJobs } from '@/lib/server/jobs';
 import { listMasters } from '@/lib/server/masters';
 import { listAdminReviews } from '@/lib/server/reviews';
 
 async function getCounts() {
-  const [caseStudies, categories, subcategories, jobs, roles, locations, employmentTypes, reviews] =
+  const [caseStudies, categories, subcategories, jobs, roles, locations, employmentTypes, reviews, contacts] =
     await Promise.all([
       listAdminCaseStudies().catch(() => []),
       listCaseStudyCategories().catch(() => []),
@@ -16,18 +18,25 @@ async function getCounts() {
       listMasters('location').catch(() => []),
       listMasters('employmentType').catch(() => []),
       listAdminReviews().catch(() => []),
+      listAdminContacts().catch(() => []),
     ]);
 
-  return [
-    { label: 'Case Studies', value: caseStudies.length, href: '/admin/case-studies' },
-    { label: 'Categories', value: categories.length, href: '/admin/case-categories' },
-    { label: 'Subcategories', value: subcategories.length, href: '/admin/case-subcategories' },
-    { label: 'Jobs', value: jobs.length, href: '/admin/jobs' },
-    { label: 'Roles', value: roles.length, href: '/admin/job-roles' },
-    { label: 'Locations', value: locations.length, href: '/admin/job-locations' },
-    { label: 'Employment Types', value: employmentTypes.length, href: '/admin/job-employment-types' },
-    { label: 'Reviews', value: reviews.length, href: '/admin/reviews' },
-  ];
+  const counts = {
+    caseStudies: caseStudies.length,
+    caseCategories: categories.length,
+    caseSubcategories: subcategories.length,
+    jobs: jobs.length,
+    jobRoles: roles.length,
+    jobLocations: locations.length,
+    jobEmploymentTypes: employmentTypes.length,
+    reviews: reviews.length,
+    contacts: contacts.length,
+  };
+
+  return ADMIN_DASHBOARD_METRICS.filter((metric) => isAdminModuleVisible(metric.key)).map((metric) => ({
+    ...metric,
+    value: counts[metric.key] || 0,
+  }));
 }
 
 export default async function AdminDashboardPage() {

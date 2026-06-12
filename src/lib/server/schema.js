@@ -73,7 +73,6 @@ const CREATE_STATEMENTS = [
     message LONGTEXT NULL,
     source VARCHAR(255) NOT NULL,
     subject VARCHAR(255) NOT NULL,
-    status TINYINT NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   )`,
   `CREATE TABLE IF NOT EXISTS job_role_master (
@@ -121,6 +120,7 @@ const CREATE_STATEMENTS = [
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     position VARCHAR(255) NULL,
+    company_name VARCHAR(255) NULL,
     message LONGTEXT NOT NULL,
     image TEXT NULL,
     sort_order INT NOT NULL DEFAULT 0,

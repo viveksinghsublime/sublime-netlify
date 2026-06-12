@@ -45,7 +45,3 @@ turbo/
 public/uploads/
 
 
-# env
-*.env
-.env/
-.env
